@@ -86,15 +86,15 @@ class Game extends React.Component {
     }
   }
 
-  deselectPiece(boardPiece) {
-    if (boardPiece === this.state.selectedPiece) {
+  deselectPiece(i) {
+    if (i === this.state.selectedPiece) {
       this.setState({
         selectedPiece: null,
       });
     }
   }
 
-  selectedPiece(i, boardPiece) {
+  selectPiece(i, boardPiece) {
     if (boardPiece === this.currentPlayer()) {
       this.setState({
         selectedPiece: i,
@@ -104,10 +104,10 @@ class Game extends React.Component {
 
   updateSelected(i, boardPiece) {
     if (this.state.selectedPiece) {
-      this.deselectPiece(boardPiece);
+      this.deselectPiece(i);
       return;
     }
-    this.selectedPiece(i, boardPiece);
+    this.selectPiece(i, boardPiece);
   }
 
   movePiece(squares, i) {
