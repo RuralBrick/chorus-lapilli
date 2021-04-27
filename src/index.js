@@ -55,6 +55,7 @@ class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
+      selectedPiece: null,
     };
   }
 
@@ -62,11 +63,7 @@ class Game extends React.Component {
     this.state.xIsNext ? 'X' : 'O';
   }
 
-  takeTurn(addPiece, removePiece) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const current = history[history.length - 1];
-    const squares = current.squares.slice();
-
+  takeTurn(squares, addPiece, removePiece) {
     if (addPiece) {
       squares[addPiece] = this.currentPlayer();
     }
@@ -78,9 +75,18 @@ class Game extends React.Component {
       history: history.concat([{
         squares: squares,
       }]),
-      stepNumber: history.length,
+      stepNumber: stepNumber + 1,
       xIsNext: !this.state.xIsNext,
     });
+  }
+
+  tictactoe(squares, i) {
+    if (!squares[i]) {
+      this.takeTurn(squares, i);
+    }
+  }
+
+  choruslapilli(i, boardPiece) {
   }
 
   handleClick(i) {
@@ -92,9 +98,11 @@ class Game extends React.Component {
       return;
     }
 
-    if (!squares[i]) {
-      this.takeTurn(i);
+    if (this.state.stepNumber <= 6) {
+      this.tictactoe(squares, i);
+      return;
     }
+    this.choruslapilli(squares, i);
   }
 
   render() {
