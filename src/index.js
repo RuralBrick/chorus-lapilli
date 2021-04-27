@@ -86,7 +86,7 @@ class Game extends React.Component {
     }
   }
 
-  choruslapilli(i, boardPiece) {
+  choruslapilli(squares, i) {
   }
 
   handleClick(i) {
@@ -107,7 +107,7 @@ class Game extends React.Component {
 
   render() {
     const history = this.state.history;
-    const current = history[this.state.stepNumber];
+    const current = history[history.length - 1];
     const winner = calculateWinner(current.squares);
 
     let status;
