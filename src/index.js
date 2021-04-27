@@ -86,7 +86,28 @@ class Game extends React.Component {
     }
   }
 
-  selectPiece(i, boardPiece) {
+  deselectPiece(boardPiece) {
+    if (boardPiece === this.state.selectedPiece) {
+      this.setState({
+        selectedPiece: null,
+      });
+    }
+  }
+
+  selectedPiece(i, boardPiece) {
+    if (boardPiece === this.currentPlayer()) {
+      this.setState({
+        selectedPiece: i,
+      });
+    }
+  }
+
+  updateSelected(i, boardPiece) {
+    if (this.state.selectedPiece) {
+      this.deselectPiece(boardPiece);
+      return;
+    }
+    this.selectedPiece(i, boardPiece);
   }
 
   movePiece(squares, i) {
@@ -96,7 +117,7 @@ class Game extends React.Component {
   choruslapilli(squares, i) {
     const boardPiece = squares[i];
     if (boardPiece) {
-      this.selectPiece(i, boardPiece);
+      this.updateSelected(i, boardPiece);
       return;
     }
     this.movePiece(squares, i);
