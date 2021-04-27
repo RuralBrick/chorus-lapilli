@@ -58,15 +58,18 @@ class Game extends React.Component {
     };
   }
 
-  handleClick(i) {
-    const history = this.state.history
-      .slice(0, this.state.stepNumber + 1);
+  takeTurn(addPiece, removePiece) {
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
-      return;
+
+    if (addPiece) {
+      squares[addPiece] = this.state.xIsNext ? 'X' : 'O';
     }
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    if (removePiece) {
+      squares[removePiece] = null;
+    }
+
     this.setState({
       history: history.concat([{
         squares: squares,
@@ -74,6 +77,20 @@ class Game extends React.Component {
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
+  }
+
+  handleClick(i) {
+    const history = this.state.history
+      .slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+    if (calculateWinner(squares)) {
+      return;
+    }
+
+    if (!squares[i]) {
+      this.takeTurn(i);
+    }
   }
 
   render() {
