@@ -58,13 +58,17 @@ class Game extends React.Component {
     };
   }
 
+  currentPlayer() {
+    this.state.xIsNext ? 'X' : 'O';
+  }
+
   takeTurn(addPiece, removePiece) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
 
     if (addPiece) {
-      squares[addPiece] = this.state.xIsNext ? 'X' : 'O';
+      squares[addPiece] = this.currentPlayer();
     }
     if (removePiece) {
       squares[removePiece] = null;
@@ -103,8 +107,7 @@ class Game extends React.Component {
       status = 'Winner: ' + winner;
     }
     else {
-      status = 'Next player: ' +
-        (this.state.xIsNext ? 'X' : 'O');
+      status = 'Next player: ' + this.currentPlayer();
     }
 
     return (
