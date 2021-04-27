@@ -86,7 +86,20 @@ class Game extends React.Component {
     }
   }
 
+  selectPiece(i, boardPiece) {
+  }
+
+  movePiece(squares, i) {
+
+  }
+
   choruslapilli(squares, i) {
+    const boardPiece = squares[i];
+    if (boardPiece) {
+      this.selectPiece(i, boardPiece);
+      return;
+    }
+    this.movePiece(squares, i);
   }
 
   handleClick(i) {
