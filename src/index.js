@@ -59,6 +59,7 @@ class Game extends React.Component {
       stepNumber: 0,
       xIsNext: true,
       selectedPiece: null,
+      pieceInMiddle: false,
     };
   }
 
@@ -149,9 +150,14 @@ class Game extends React.Component {
 
     if (this.state.stepNumber < 6) {
       this.tictactoe(history, squares, i);
-      return;
     }
-    this.choruslapilli(history, squares, i);
+    else {
+      this.choruslapilli(history, squares, i);
+    }
+
+    this.setState({
+      pieceInMiddle: (squares[4] === this.currentPlayer()),
+    });
   }
 
   render() {
