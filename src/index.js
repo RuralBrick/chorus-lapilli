@@ -79,6 +79,7 @@ class Game extends React.Component {
   }
 
   takeTurn(history, squares) {
+    const prevPlayer = this.state.xIsNext ? 'O' : 'X';
     this.setState({
       history: history.concat([{
         squares: squares,
@@ -86,6 +87,7 @@ class Game extends React.Component {
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
       selectedPiece: null,
+      pieceInMiddle: (squares[4] === prevPlayer),
     });
   }
 
@@ -123,8 +125,9 @@ class Game extends React.Component {
     const yDisp = Math.floor(i / 3) - Math.floor(this.state.selectedPiece / 3);
 
     const inRange = Math.abs(xDisp) <= 1 && Math.abs(yDisp) <= 1;
+    const useCenterRule = this.state.pieceInMiddle && newBoard[4];
     const wontWin = !calculateWinner(newBoard);
-    if (inRange && !(this.state.pieceInMiddle && wontWin)) {
+    if (inRange && !(useCenterRule && wontWin)) {
       this.takeTurn(history, newBoard);
     }
   }
@@ -151,14 +154,9 @@ class Game extends React.Component {
 
     if (this.state.stepNumber < 6) {
       this.tictactoe(history, squares, i);
+      return;
     }
-    else {
-      this.choruslapilli(history, squares, i);
-    }
-
-    this.setState({
-      pieceInMiddle: (squares[4] === this.currentPlayer()),
-    });
+    this.choruslapilli(history, squares, i);
   }
 
   render() {
