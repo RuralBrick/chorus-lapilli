@@ -67,20 +67,18 @@ class Game extends React.Component {
     return (this.state.xIsNext ? 'X' : 'O');
   }
 
-  placePiece(history, squares, i) {
+  placePiece(squares, i) {
     squares[i] = this.currentPlayer();
-    this.setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
-      stepNumber: history.length,
-      xIsNext: !this.state.xIsNext,
-    });
+    return squares;
   }
 
-  movePiece(history, squares, i) {
+  movePiece(squares, i) {
     squares[i] = this.currentPlayer();
     squares[this.state.selectedPiece] = null;
+    return squares;
+  }
+
+  takeTurn(history, squares) {
     this.setState({
       history: history.concat([{
         squares: squares,
@@ -93,7 +91,7 @@ class Game extends React.Component {
 
   tictactoe(history, squares, i) {
     if (!squares[i]) {
-      this.placePiece(history, squares, i);
+      this.takeTurn(history, this.placePiece(squares, i));
     }
   }
 
@@ -126,8 +124,10 @@ class Game extends React.Component {
       const xDisp = (i % 3) - (this.state.selectedPiece % 3);
       const yDisp = Math.floor(i / 3) - Math.floor(this.state.selectedPiece / 3);
       if (Math.abs(xDisp) <= 1 && Math.abs(yDisp) <= 1) {
-        this.movePiece(history, squares, i);
+        this.takeTurn(history, this.movePiece(squares, i));
       }
+
+
     }
   }
 
