@@ -5,8 +5,10 @@ import './index.css';
 function Square(props) {
   return (
     <button
+      id={props.id}
       className="square"
       onClick={props.onClick}
+      background={props.color}
     >
       {props.value}
     </button>
@@ -19,6 +21,7 @@ class Board extends React.Component {
       <Square
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
+        id={i === this.props.highlight ? "highlight" : ""}
       />
     );
   }
@@ -170,6 +173,7 @@ class Game extends React.Component {
           <Board
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
+            highlight={this.state.selectedPiece}
           />
         </div>
         <div className="game-info">
