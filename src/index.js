@@ -60,29 +60,36 @@ class Game extends React.Component {
   }
 
   currentPlayer() {
-    this.state.xIsNext ? 'X' : 'O';
+    return (this.state.xIsNext ? 'X' : 'O');
   }
 
-  takeTurn(squares, addPiece, removePiece) {
-    if (addPiece) {
-      squares[addPiece] = this.currentPlayer();
-    }
-    if (removePiece) {
-      squares[removePiece] = null;
-    }
-
+  placePiece(history, squares, i) {
+    squares[i] = this.currentPlayer();
     this.setState({
       history: history.concat([{
         squares: squares,
       }]),
-      stepNumber: stepNumber + 1,
+      stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
   }
 
-  tictactoe(squares, i) {
+  movePiece(history, squares, i) {
+    squares[i] = this.currentPlayer();
+    squares[this.state.selectedPiece] = null;
+    this.setState({
+      history: history.concat([{
+        squares: squares,
+      }]),
+      stepNumber: history.length,
+      xIsNext: !this.state.xIsNext,
+      selectedPiece: null,
+    });
+  }
+
+  tictactoe(history, squares, i) {
     if (!squares[i]) {
-      this.takeTurn(squares, i);
+      this.placePiece(history, squares, i);
     }
   }
 
@@ -103,24 +110,30 @@ class Game extends React.Component {
   }
 
   updateSelected(i, boardPiece) {
-    if (this.state.selectedPiece) {
+    if (this.state.selectedPiece !== null) {
       this.deselectPiece(i);
       return;
     }
     this.selectPiece(i, boardPiece);
   }
 
-  movePiece(squares, i) {
-
+  moveSelected(history, squares, i) {
+    if (this.state.selectedPiece !== null) {
+      const xDisp = (i % 3) - (this.state.selectedPiece % 3);
+      const yDisp = Math.floor(i / 3) - Math.floor(this.state.selectedPiece / 3);
+      if (Math.abs(xDisp) <= 1 && Math.abs(yDisp) <= 1) {
+        this.movePiece(history, squares, i);
+      }
+    }
   }
 
-  choruslapilli(squares, i) {
+  choruslapilli(history, squares, i) {
     const boardPiece = squares[i];
     if (boardPiece) {
       this.updateSelected(i, boardPiece);
       return;
     }
-    this.movePiece(squares, i);
+    this.moveSelected(history, squares, i);
   }
 
   handleClick(i) {
@@ -131,16 +144,16 @@ class Game extends React.Component {
       return;
     }
 
-    if (this.state.stepNumber <= 6) {
-      this.tictactoe(squares, i);
+    if (this.state.stepNumber < 6) {
+      this.tictactoe(history, squares, i);
       return;
     }
-    this.choruslapilli(squares, i);
+    this.choruslapilli(history, squares, i);
   }
 
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
     let status;
