@@ -120,14 +120,14 @@ class Game extends React.Component {
   }
 
   moveSelected(history, squares, i) {
-    if (this.state.selectedPiece !== null) {
-      const xDisp = (i % 3) - (this.state.selectedPiece % 3);
-      const yDisp = Math.floor(i / 3) - Math.floor(this.state.selectedPiece / 3);
-      if (Math.abs(xDisp) <= 1 && Math.abs(yDisp) <= 1) {
-        this.takeTurn(history, this.movePiece(squares, i));
-      }
+    const newBoard = this.movePiece(squares, i);
+    const xDisp = (i % 3) - (this.state.selectedPiece % 3);
+    const yDisp = Math.floor(i / 3) - Math.floor(this.state.selectedPiece / 3);
 
-
+    const inRange = Math.abs(xDisp) <= 1 && Math.abs(yDisp) <= 1;
+    const wontWin = !calculateWinner(newBoard);
+    if (inRange && !(this.state.pieceInMiddle && wontWin)) {
+      this.takeTurn(history, newBoard);
     }
   }
 
@@ -137,7 +137,10 @@ class Game extends React.Component {
       this.updateSelected(i, boardPiece);
       return;
     }
-    this.moveSelected(history, squares, i);
+    if (this.state.selectedPiece !== null) {
+      this.moveSelected(history, squares, i);
+      return;
+    }
   }
 
   handleClick(i) {
